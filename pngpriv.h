@@ -182,6 +182,35 @@
 #  endif
 #endif /* PNG_ARM_NEON_OPT > 0 */
 
+
+#ifndef PNG_MIPS_MSA_OPT
+#  if defined(__mips_msa) && (__mips_isa_rev >= 5) && defined(PNG_ALIGNED_MEMORY_SUPPORTED)
+#     define PNG_MIPS_MSA_OPT 2
+#  else
+#     define PNG_MIPS_MSA_OPT 0
+#  endif
+#endif
+
+#if PNG_MIPS_MSA_OPT > 0
+#  define PNG_FILTER_OPTIMIZATIONS png_init_filter_functions_msa
+#  ifndef PNG_MIPS_MSA_IMPLEMENTATION
+#     if defined(__mips_msa)
+#        if defined(__clang__)
+#        elif defined(__GNUC__)
+#           if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 7)
+#              define PNG_MIPS_MSA_IMPLEMENTATION 2
+#           endif /* no GNUC support */
+#        endif /* __GNUC__ */
+#     else /* !defined __mips_msa */
+#        define PNG_MIPS_MSA_IMPLEMENTATION 2
+#     endif /* __mips_msa */
+#  endif /* !PNG_MIPS_MSA_IMPLEMENTATION */
+
+#  ifndef PNG_MIPS_MSA_IMPLEMENTATION
+#     define PNG_MIPS_MSA_IMPLEMENTATION 1
+#  endif
+#endif /* PNG_MIPS_MSA_OPT > 0 */
+
 #ifndef PNG_INTEL_SSE_OPT
 #   ifdef PNG_INTEL_SSE
       /* Only check for SSE if the build configuration has been modified to
@@ -1225,6 +1254,23 @@ PNG_INTERNAL_FUNCTION(void,png_read_filter_row_paeth3_neon,(png_row_infop
 PNG_INTERNAL_FUNCTION(void,png_read_filter_row_paeth4_neon,(png_row_infop
     row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
 
+#if PNG_MIPS_MSA_OPT > 0
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_up_msa,(png_row_infop row_info,
+    png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_sub3_msa,(png_row_infop
+    row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_sub4_msa,(png_row_infop
+    row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_avg3_msa,(png_row_infop
+    row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_avg4_msa,(png_row_infop
+    row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_paeth3_msa,(png_row_infop
+    row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void,png_read_filter_row_paeth4_msa,(png_row_infop
+    row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
+#endif
+
 PNG_INTERNAL_FUNCTION(void,png_read_filter_row_sub3_sse2,(png_row_infop
     row_info, png_bytep row, png_const_bytep prev_row),PNG_EMPTY);
 PNG_INTERNAL_FUNCTION(void,png_read_filter_row_sub4_sse2,(png_row_infop
@@ -1965,6 +2011,8 @@ PNG_INTERNAL_FUNCTION(void, PNG_FILTER_OPTIMIZATIONS, (png_structp png_ptr,
 PNG_INTERNAL_FUNCTION(void, png_init_filter_functions_neon,
    (png_structp png_ptr, unsigned int bpp), PNG_EMPTY);
 PNG_INTERNAL_FUNCTION(void, png_init_filter_functions_sse2,
+   (png_structp png_ptr, unsigned int bpp), PNG_EMPTY);
+PNG_INTERNAL_FUNCTION(void, png_init_filter_functions_msa,
    (png_structp png_ptr, unsigned int bpp), PNG_EMPTY);
 #endif
 
