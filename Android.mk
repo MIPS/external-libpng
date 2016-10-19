@@ -37,6 +37,14 @@ my_src_files_intel := \
     contrib/intel/intel_init.c \
     contrib/intel/filter_sse2_intrinsics.c
 
+ifeq ($(ARCH_MIPS_HAS_MSA),true)
+my_cflags_mips := -DPNG_MIPS_MSA_OPT=2
+
+my_src_files_mips := \
+    mips/mips_init.c \
+    mips/filter_msa_intrinsics.c
+endif
+
 common_CFLAGS := -std=gnu89 -Wno-unused-parameter #-fvisibility=hidden ## -fomit-frame-pointer
 
 # For the host
@@ -70,11 +78,14 @@ LOCAL_SRC_FILES_arm := $(my_src_files_arm)
 LOCAL_SRC_FILES_arm64 := $(my_src_files_arm)
 LOCAL_SRC_FILES_x86 += $(my_src_files_intel)
 LOCAL_SRC_FILES_x86_64 += $(my_src_files_intel)
+LOCAL_SRC_FILES_mips := $(my_src_files_mips)
+LOCAL_SRC_FILES_mips64 := $(my_src_files_mips)
 LOCAL_CFLAGS += $(common_CFLAGS) -ftrapv
 LOCAL_CFLAGS_arm := $(my_cflags_arm)
 LOCAL_CFLAGS_arm64 := $(my_cflags_arm64)
 LOCAL_CFLAGS_x86 += $(my_cflags_intel)
 LOCAL_CFLAGS_x86_64 += $(my_cflags_intel)
+LOCAL_CFLAGS_mips := $(my_cflags_mips)
 LOCAL_ASFLAGS += $(common_ASFLAGS)
 LOCAL_SANITIZE := never
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
@@ -93,11 +104,14 @@ LOCAL_SRC_FILES_arm := $(my_src_files_arm)
 LOCAL_SRC_FILES_arm64 := $(my_src_files_arm)
 LOCAL_SRC_FILES_x86 += $(my_src_files_intel)
 LOCAL_SRC_FILES_x86_64 += $(my_src_files_intel)
+LOCAL_SRC_FILES_mips := $(my_src_files_mips)
+LOCAL_SRC_FILES_mips64 := $(my_src_files_mips)
 LOCAL_CFLAGS += $(common_CFLAGS) -ftrapv
 LOCAL_CFLAGS_arm := $(my_cflags_arm)
 LOCAL_CFLAGS_arm64 := $(my_cflags_arm64)
 LOCAL_CFLAGS_x86 += $(my_cflags_intel)
 LOCAL_CFLAGS_x86_64 += $(my_cflags_intel)
+LOCAL_CFLAGS_mips := $(my_cflags_mips)
 LOCAL_ASFLAGS += $(common_ASFLAGS)
 LOCAL_SANITIZE := never
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
@@ -115,11 +129,14 @@ LOCAL_SRC_FILES_arm := $(my_src_files_arm)
 LOCAL_SRC_FILES_arm64 := $(my_src_files_arm)
 LOCAL_SRC_FILES_x86 += $(my_src_files_intel)
 LOCAL_SRC_FILES_x86_64 += $(my_src_files_intel)
+LOCAL_SRC_FILES_mips := $(my_src_files_mips)
+LOCAL_SRC_FILES_mips64 := $(my_src_files_mips)
 LOCAL_CFLAGS += $(common_CFLAGS) -ftrapv
 LOCAL_CFLAGS_arm := $(my_cflags_arm)
 LOCAL_CFLAGS_arm64 := $(my_cflags_arm64)
 LOCAL_CFLAGS_x86 += $(my_cflags_intel)
 LOCAL_CFLAGS_x86_64 += $(my_cflags_intel)
+LOCAL_CFLAGS_mips := $(my_cflags_mips)
 LOCAL_ASFLAGS += $(common_ASFLAGS)
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
 LOCAL_SHARED_LIBRARIES := libz
