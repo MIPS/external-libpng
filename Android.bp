@@ -39,6 +39,18 @@ cc_defaults {
                 "arm/filter_neon_intrinsics.c",
             ],
         },
+        mips: {
+            srcs: [
+                "mips/mips_init.c",
+                "mips/filter_msa_intrinsics.c",
+            ],
+        },
+        mips64: {
+            srcs: [
+                "mips/mips_init.c",
+                "mips/filter_msa_intrinsics.c",
+            ],
+        },
         x86: {
             srcs: [
                 "contrib/intel/intel_init.c",

@@ -38,7 +38,7 @@
 
 #if PNG_MIPS_MSA_OPT > 0
 
-#ifdef CLANG_BUILD
+#if defined(__clang__)
    #define MSA_SRLI_B(a, b)   __msa_srli_b((v16i8) a, b)
 
    #define LW(psrc)                              \
